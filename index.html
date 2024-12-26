@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Compiler</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f0f0f0;
+    }
+    textarea {
+      width: 80%;
+      height: 200px;
+      font-size: 16px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    #output {
+      width: 80%;
+      height: 150px;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 10px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Online Compiler</h1>
+  <textarea id="code" placeholder="Write your JavaScript code here..."></textarea>
+  <button id="run">Run Code</button>
+  <h3>Output:</h3>
+  <div id="output"></div>
+
+  <script>
+    document.getElementById("run").addEventListener("click", () => {
+      const code = document.getElementById("code").value;
+      fetch("http://localhost:3000/execute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error) {
+            document.getElementById("output").innerText = `Error: ${data.error}`;
+          } else {
+            document.getElementById("output").innerText = `Output: ${data.output}`;
+          }
+        })
+        .catch((error) => {
+          document.getElementById("output").innerText = `Error: ${error.message}`;
+        });
+    });
+  </script>
+</body>
+</html>
